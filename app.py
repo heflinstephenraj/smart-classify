@@ -41,9 +41,9 @@ class MainApplication():
             classify_btn.pack()
             
             def online_image_classify(tab1):
-                    vr_api = IAMAuthenticator("hMgDpMfCbeDZOIwAWwgTl3VUrZlEGVWqaAhftsZcjsuu") #paste your API Key
+                    vr_api = IAMAuthenticator("") #paste your API Key
                     vr1=vr(version="2018-03-19",authenticator=vr_api)
-                    vr1.set_service_url("https://api.us-south.visual-recognition.watson.cloud.ibm.com/instances/28c57a28-94d0-4837-a75b-73b89034f60d") #paste your service URL
+                    vr1.set_service_url("")#paste your service URL
                     try:
 
                         ibm_result=vr1.classify(url=url.get()).get_result()
