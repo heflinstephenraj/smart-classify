@@ -39,11 +39,14 @@ class MainApplication():
             classify_btn["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
             ttk.Label(tab1).pack()
             classify_btn.pack()
+            loc_img_info = ttk.Label(tab2,text="We will send the image to IBM Watson Visual Recognition service for classification.\nWe do not save your images.\nInput: JPEG (.jpg) and PNG (.png) \nOutput: Classifications will be appeared on the screen with confident score for each classification.",justify=CENTER)
+            loc_img_info["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold')
+            loc_img_info.pack()
             
             def online_image_classify(tab1):
                     vr_api = IAMAuthenticator("api-key") #paste your API Key
                     vr1=vr(version="2018-03-19",authenticator=vr_api)
-                    vr1.set_service_url("service-url") #paste your service URL
+                    vr1.set_service_url("service-key")#paste your service URL
                     try:
 
                         ibm_result=vr1.classify(url=url.get()).get_result()
