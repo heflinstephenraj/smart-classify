@@ -41,9 +41,9 @@ class MainApplication():
             classify_btn.pack()
             
             def online_image_classify(tab1):
-                    vr_api = IAMAuthenticator("") #paste your API Key
+                    vr_api = IAMAuthenticator("api-key") #paste your API Key
                     vr1=vr(version="2018-03-19",authenticator=vr_api)
-                    vr1.set_service_url("")#paste your service URL
+                    vr1.set_service_url("service-url") #paste your service URL
                     try:
 
                         ibm_result=vr1.classify(url=url.get()).get_result()
@@ -63,14 +63,8 @@ class MainApplication():
                         clear_btm.pack()
                         result.pack()
                         frame.pack()
-
-                        print(ibm_result)
                     except:
-                        wrg=messagebox.showwarning(title="URL Error", message=f'''
-Please enter the proper image URL to classify. 
-The given URl is not a image URL.
-The given URL is "{url.get()}".
-''')
+                        wrg=messagebox.showwarning(title="URL Error", message=f'''Please enter the proper image URL to classify.\nThe given URl is not a image URL.\nThe given URL is "{url.get()}".''')
                     
 
             def clear(*widgets):
