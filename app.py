@@ -51,29 +51,29 @@ class MainApplication():
 
 
         def local_image_classify(self,tab2):
-                    img_file = askopenfilename(filetypes=[("Image files",("*.png","*.jpeg","*.jpg"))])                    
-                    vr_api = IAMAuthenticator("api-key") #paste your API Key
-                    vr1=vr(version="2018-03-19",authenticator=vr_api)
-                    vr1.set_service_url("service-url") #paste your service URL
-                    with open(img_file,"rb") as img:
-                            loc_img_result=vr1.classify(images_file=img).get_result()
-                            empt1 = ttk.Label(tab2)
-                            empt1.pack()
-                            result_loc = ttk.Label(tab2,text= "Result")
-                            clear_loc_btm=Button(tab2,text="Clear result",bg="black",fg="white")
-                            result_loc["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold',underline = True )
-                            result_loc1='''<html><head></head><body><table style="width:100%" border="1"><tr><th><h2 style="color:red;font-family:Comic Sans MS">Classification</h2></th><th><h2 style="color:red;font-family:Comic Sans MS">Confident Score<h2></th></tr>'''
-                            for i in range(len(loc_img_result["images"][0]["classifiers"][0]["classes"])):
-                                    result_loc1=result_loc1+f'<tr><td><center><h3 style="color:blue;font-family:Comic Sans MS">{loc_img_result["images"][0]["classifiers"][0]["classes"][i]["class"]}</h3> </center></td><td><center><h3 style="color:blue;font-family:Comic Sans MS"> {str(round(loc_img_result["images"][0]["classifiers"][0]["classes"][i]["score"]*100))}%</h3> </center></td></tr>'
-                            result_loc1=result_loc1+f'</table></body></html>'
-                            frame_loc = HtmlFrame(tab2,height=10)
-                            frame_loc.set_content(result_loc1)
-                            clear_loc_btm["command"] = lambda one=result_loc, two=clear_loc_btm, three = empt1, four=frame_loc: self.clear(one,two,three,four)
-                            clear_loc_btm["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
-                            clear_loc_btm.pack()
-                            result_loc.pack()
-                            frame_loc.pack()
-                    
+                img_file = askopenfilename(filetypes=[("Image files",("*.png","*.jpeg","*.jpg"))])                    
+                vr_api = IAMAuthenticator("api-key") #paste your API Key
+                vr1=vr(version="2018-03-19",authenticator=vr_api)
+                vr1.set_service_url("service-url") #paste your service URL
+                with open(img_file,"rb") as img:
+                        loc_img_result=vr1.classify(images_file=img).get_result()
+                empt1 = ttk.Label(tab2)
+                empt1.pack()
+                result_loc = ttk.Label(tab2,text= "Result")
+                clear_loc_btm=Button(tab2,text="Clear result",bg="black",fg="white")
+                result_loc["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold',underline = True )
+                result_loc1='''<html><head></head><body><table style="width:100%" border="1"><tr><th><h2 style="color:red;font-family:Comic Sans MS">Classification</h2></th><th><h2 style="color:red;font-family:Comic Sans MS">Confident Score<h2></th></tr>'''
+                for i in range(len(loc_img_result["images"][0]["classifiers"][0]["classes"])):
+                        result_loc1=result_loc1+f'<tr><td><center><h3 style="color:blue;font-family:Comic Sans MS">{loc_img_result["images"][0]["classifiers"][0]["classes"][i]["class"]}</h3> </center></td><td><center><h3 style="color:blue;font-family:Comic Sans MS"> {str(round(loc_img_result["images"][0]["classifiers"][0]["classes"][i]["score"]*100))}%</h3> </center></td></tr>'
+                result_loc1=result_loc1+f'</table></body></html>'
+                frame_loc = HtmlFrame(tab2,height=10)
+                frame_loc.set_content(result_loc1)
+                clear_loc_btm["command"] = lambda one=result_loc, two=clear_loc_btm, three = empt1, four=frame_loc: self.clear(one,two,three,four)
+                clear_loc_btm["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
+                clear_loc_btm.pack()
+                result_loc.pack()
+                frame_loc.pack()
+
             
 
         def online_image_classify(self,tab1,url):
