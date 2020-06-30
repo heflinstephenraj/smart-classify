@@ -79,7 +79,7 @@ class MainApplication():
         def online_image_classify(self,tab1,url):
                 vr_api = IAMAuthenticator("api-key") #paste your API Key
                 vr1=vr(version="2018-03-19",authenticator=vr_api)
-                vr1.set_service_url("service-url") #paste your service URL
+                vr1.set_service_url("service-key") #paste your service URL
                 try:
                         ibm_result=vr1.classify(url=url.get()).get_result()
                         empt = ttk.Label(tab1)
@@ -99,7 +99,7 @@ class MainApplication():
                         result.pack()
                         frame.pack()
                 except:
-                       messagebox.showwarning(title="URL Error", message=f'''Please enter the proper image URL to classify.\nThe given URl is not a image URL.\nThe given URL is "{url.get()}".''')
+                        messagebox.showwarning(title="URL Error", message=f'''Please enter the proper image URL to classify.\nThe given URl is not a image URL.\nThe given URL is "{url.get()}".''')
                     
 
         def clear(self,*widgets):
