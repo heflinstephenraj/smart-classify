@@ -35,9 +35,9 @@ class MainApplication():
                 url = ttk.Entry(tab1)
                 entry = ttk.Label(tab1,text="Enter the URL below")
                 entry["font"] = font.Font(family='Comic Sans MS', size=12)
-                classify_url_btn = Button(tab1,text = "Classify",  bg="yellow", command=lambda master=tab1: self.online_image_classify(master))
                 entry.pack()
                 url.pack()
+                classify_url_btn = Button(tab1,text = "Classify",  bg="yellow", command=lambda master=tab1,img_url=url: self.online_image_classify(master,url=img_url))
                 classify_url_btn["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
                 ttk.Label(tab1).pack()
                 classify_url_btn.pack()
@@ -76,7 +76,7 @@ class MainApplication():
                     
             
 
-        def online_image_classify(self,tab1):
+        def online_image_classify(self,tab1,url):
                 vr_api = IAMAuthenticator("api-key") #paste your API Key
                 vr1=vr(version="2018-03-19",authenticator=vr_api)
                 vr1.set_service_url("service-url") #paste your service URL
@@ -99,7 +99,7 @@ class MainApplication():
                         result.pack()
                         frame.pack()
                 except:
-                        wrg=messagebox.showwarning(title="URL Error", message=f'''Please enter the proper image URL to classify.\nThe given URl is not a image URL.\nThe given URL is "{url.get()}".''')
+                       wrg=messagebox.showwarning(title="URL Error", message=f'''Please enter the proper image URL to classify.\nThe given URl is not a image URL.\nThe given URL is "{url.get()}".''')
                     
 
         def clear(self,*widgets):
