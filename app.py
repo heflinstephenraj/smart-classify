@@ -99,7 +99,7 @@ class MainApplication():
                         result.pack()
                         frame.pack()
                 except:
-                       wrg=messagebox.showwarning(title="URL Error", message=f'''Please enter the proper image URL to classify.\nThe given URl is not a image URL.\nThe given URL is "{url.get()}".''')
+                       messagebox.showwarning(title="URL Error", message=f'''Please enter the proper image URL to classify.\nThe given URl is not a image URL.\nThe given URL is "{url.get()}".''')
                     
 
         def clear(self,*widgets):
