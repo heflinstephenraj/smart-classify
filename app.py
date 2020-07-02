@@ -6,6 +6,7 @@ from ibm_watson import VisualRecognitionV3 as vr
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from tkinterhtml import HtmlFrame
 from tkinter.filedialog import askopenfilename
+from ibm_watson import SpeechToTextV1
 
 class MainApplication():
 
@@ -48,13 +49,51 @@ class MainApplication():
                 classify_loc_btn = Button(tab2,text = "Classify",  bg="yellow", command=lambda master=tab2: self.local_image_classify(master))
                 classify_loc_btn["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
                 classify_loc_btn.pack()
+                speech_2_text_info = ttk.Label(tab3,text="We will send the audio to IBM Watson Speech to Text service for classification.\nWe do not save your audio file.\nInput: MP3 (.mp3) \nOutput: Text will be displayed on your screen with confident score.",justify=CENTER)
+                speech_2_text_info["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold')
+                speech_2_text_info.pack()
+                ttk.Label(tab3).pack()
+                convert_sph_2_txt = Button(tab3,text = "Convert",  bg="yellow", command=lambda master=tab3: self.speech_to_text(master))
+                convert_sph_2_txt["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
+                convert_sph_2_txt.pack()
+                
+                
+                
+
+        def speech_to_text(self,master):
+                speech_to_text_api = IAMAuthenticator(' ')
+                speech_to_text = SpeechToTextV1(authenticator=speech_to_text_api)
+                speech_to_text.set_service_url(' ')
+                audio = askopenfilename(filetypes=[("mp3 file","*.mp3")])
+                with open(audio,"rb") as audio_file:
+                        speech_to_text_results = speech_to_text.recognize(audio=audio_file,content_type='audio/mp3').get_result()
+                result_s_2_t='''<html><head></head><body><table style="width:100%" border="1"><tr><th><h3 style="color:red;font-family:Comic Sans MS">Classification</h3></th><th><h3 style="color:red;font-family:Comic Sans MS">Confident\nScore<h3></th></tr>'''
+                for result in speech_to_text_results["results"]:
+                        for classification in result:
+                                if classification != "final":
+                                        result_s_2_t=result_s_2_t+f'<tr><td><center><h3 style="color:blue;font-family:Comic Sans MS">{result[classification][0]["transcript"]}</h3> </center></td><td><center><h3 style="color:blue;font-family:Comic Sans MS"> {str(round(result[classification][0]["confidence"]*100))}%</h3> </center></td></tr>'
+                result_s_2_t=result_s_2_t+f'</table></body></html>'
+                empt1 = ttk.Label(master)
+                empt1.pack()
+                result_loc = ttk.Label(master,text= "Result")
+                clear_loc_btm=Button(master,text="Clear result",bg="black",fg="white")
+                result_loc["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold',underline = True )
+                frame_loc = HtmlFrame(master)
+                frame_loc.set_content(result_s_2_t)
+                clear_loc_btm["command"] = lambda one=result_loc, two=clear_loc_btm, three = empt1, four=frame_loc: self.clear(one,two,three,four)
+                clear_loc_btm["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
+                clear_loc_btm.pack()
+                result_loc.pack()
+                frame_loc.pack(fill="x")
+
+
 
 
         def local_image_classify(self,tab2):
-                img_file = askopenfilename(filetypes=[("Image files",("*.png","*.jpeg","*.jpg"))])                    
-                vr_api = IAMAuthenticator("api-key") #paste your API Key
+                img_file = askopenfilename(filetypes=[("Image files",("*.png","*.jpeg","*.jpg"))])                   
+                vr_api = IAMAuthenticator(" ") #paste your API Key
                 vr1=vr(version="2018-03-19",authenticator=vr_api)
-                vr1.set_service_url("service-url") #paste your service URL
+                vr1.set_service_url(" ") #paste your service URL
                 with open(img_file,"rb") as img:
                         loc_img_result=vr1.classify(images_file=img).get_result()
                 empt1 = ttk.Label(tab2)
@@ -77,9 +116,9 @@ class MainApplication():
             
 
         def online_image_classify(self,tab1,url):
-                vr_api = IAMAuthenticator("api-key") #paste your API Key
+                vr_api = IAMAuthenticator(" ") #paste your API Key
                 vr1=vr(version="2018-03-19",authenticator=vr_api)
-                vr1.set_service_url("service-key") #paste your service URL
+                vr1.set_service_url(" ") #paste your service URL
                 try:
                         ibm_result=vr1.classify(url=url.get()).get_result()
                         empt = ttk.Label(tab1)
