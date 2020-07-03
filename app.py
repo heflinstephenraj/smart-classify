@@ -42,6 +42,7 @@ class MainApplication():
                 classify_url_btn["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
                 ttk.Label(tab1).pack()
                 classify_url_btn.pack()
+                ttk.Label(tab1).pack()
                 loc_img_info = ttk.Label(tab2,text="We will send the image to IBM Watson Visual Recognition service for classification.\nWe do not save your images.\nInput: JPEG (.jpg) and PNG (.png) \nOutput: Classifications will be appeared on the screen with confident score for each classification.",justify=CENTER)
                 loc_img_info["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold')
                 loc_img_info.pack()
@@ -49,6 +50,7 @@ class MainApplication():
                 classify_loc_btn = Button(tab2,text = "Classify",  bg="yellow", command=lambda master=tab2: self.local_image_classify(master))
                 classify_loc_btn["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
                 classify_loc_btn.pack()
+                ttk.Label(tab2).pack()
                 speech_2_text_info = ttk.Label(tab3,text="We will send the audio to IBM Watson Speech to Text service for classification.\nWe do not save your audio file.\nInput: MP3 (.mp3) \nOutput: Text will be displayed on your screen with confident score.",justify=CENTER)
                 speech_2_text_info["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold')
                 speech_2_text_info.pack()
@@ -56,14 +58,58 @@ class MainApplication():
                 convert_sph_2_txt = Button(tab3,text = "Convert",  bg="yellow", command=lambda master=tab3: self.speech_to_text(master))
                 convert_sph_2_txt["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
                 convert_sph_2_txt.pack()
-                
-                
+                ttk.Label(tab3).pack()
+                text_2_speech_info = ttk.Label(tab4,text="We will send the text file to IBM Watson Text to Speech service for classification.\nWe do not save your text file.\nInput: Text file (.txt) \nOutput: Mp3 (.mp3)",justify=CENTER)
+                text_2_speech_info["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold')
+                text_2_speech_info.pack()
+                ttk.Label(tab4).pack()
+                convert_txt_2_sph = Button(tab4,text = "Convert",  bg="yellow", command=lambda master=tab4: self.text_to_speech(master))
+                convert_txt_2_sph["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
+                convert_txt_2_sph.pack()
+                ttk.Label(tab4).pack()
+            
+                              
+        def text_to_speech(self,master):
+                def sel():
+                        selection = "Your audio will be saved in " + str(var.get())
+                        label.config(text = selection)
+                text_file = askopenfilename(filetypes=[("text file","*.txt")])
+                with open(text_file) as text_data:
+                        text = text_data.read()
+                text_html = f'''<html><head></head><body><p>{text}</p></body><html>'''
+                result_loc = ttk.Label(master,text= "The Text")
+                clear_loc_btm=Button(master,text="Clear",bg="black",fg="white")
+                result_loc["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold',underline = True )
+                frame_loc = HtmlFrame(master,horizontal_scrollbar="auto",vertical_scrollbar="auto")
+                frame_loc.set_content(text_html)
+                clear_loc_btm["font"] = font.Font(family='Comic Sans MS', size=12,weight='bold')
+                var = StringVar()
+                R1 = Radiobutton(master, text="Save as male voice", variable=var, value="male voice",command=sel)
+                R1["font"] = font.Font(family='Comic Sans MS', size=11)
+                R1.pack()
+                R2 = Radiobutton(master, text="Save as female voice", variable=var, value="female voice",command=sel)
+                R2["font"] = font.Font(family='Comic Sans MS', size=11)
+                R2.pack() 
+                label = ttk.Label(master)
+                label["font"] = font.Font(family='Comic Sans MS', size=11)
+                label.pack()
+                save_audio = Button(master,text="Save",bg="blue",fg="white")
+                save_audio["font"] = font.Font(family='Comic Sans MS', size=11, weight='bold')
+                save_audio.pack()
+                em = ttk.Label(master)
+                em.pack()
+                clear_loc_btm["command"] = lambda one=result_loc, two=clear_loc_btm, three=frame_loc, four=R1, five=R2, six=label, seven = save_audio,egith = em: self.clear(one,two,three,four,five,six,seven,egith)
+                clear_loc_btm.pack()
+                result_loc.pack()
+                frame_loc.pack(fill="x")
+
+
                 
 
         def speech_to_text(self,master):
-                speech_to_text_api = IAMAuthenticator(' ')
+                speech_to_text_api = IAMAuthenticator('api-key')
                 speech_to_text = SpeechToTextV1(authenticator=speech_to_text_api)
-                speech_to_text.set_service_url(' ')
+                speech_to_text.set_service_url('service-url')
                 audio = askopenfilename(filetypes=[("mp3 file","*.mp3")])
                 with open(audio,"rb") as audio_file:
                         speech_to_text_results = speech_to_text.recognize(audio=audio_file,content_type='audio/mp3').get_result()
@@ -73,14 +119,12 @@ class MainApplication():
                                 if classification != "final":
                                         result_s_2_t=result_s_2_t+f'<tr><td><center><h3 style="color:blue;font-family:Comic Sans MS">{result[classification][0]["transcript"]}</h3> </center></td><td><center><h3 style="color:blue;font-family:Comic Sans MS"> {str(round(result[classification][0]["confidence"]*100))}%</h3> </center></td></tr>'
                 result_s_2_t=result_s_2_t+f'</table></body></html>'
-                empt1 = ttk.Label(master)
-                empt1.pack()
                 result_loc = ttk.Label(master,text= "Result")
                 clear_loc_btm=Button(master,text="Clear result",bg="black",fg="white")
                 result_loc["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold',underline = True )
-                frame_loc = HtmlFrame(master)
+                frame_loc = HtmlFrame(master,horizontal_scrollbar="auto",vertical_scrollbar="auto")
                 frame_loc.set_content(result_s_2_t)
-                clear_loc_btm["command"] = lambda one=result_loc, two=clear_loc_btm, three = empt1, four=frame_loc: self.clear(one,two,three,four)
+                clear_loc_btm["command"] = lambda one=result_loc, two=clear_loc_btm, three=frame_loc: self.clear(one,two,three)
                 clear_loc_btm["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
                 clear_loc_btm.pack()
                 result_loc.pack()
@@ -89,15 +133,14 @@ class MainApplication():
 
 
 
+
         def local_image_classify(self,tab2):
                 img_file = askopenfilename(filetypes=[("Image files",("*.png","*.jpeg","*.jpg"))])                   
-                vr_api = IAMAuthenticator(" ") #paste your API Key
+                vr_api = IAMAuthenticator("api-key") #paste your API Key
                 vr1=vr(version="2018-03-19",authenticator=vr_api)
-                vr1.set_service_url(" ") #paste your service URL
+                vr1.set_service_url("service-url") #paste your service URL
                 with open(img_file,"rb") as img:
                         loc_img_result=vr1.classify(images_file=img).get_result()
-                empt1 = ttk.Label(tab2)
-                empt1.pack()
                 result_loc = ttk.Label(tab2,text= "Result")
                 clear_loc_btm=Button(tab2,text="Clear result",bg="black",fg="white")
                 result_loc["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold',underline = True )
@@ -105,9 +148,9 @@ class MainApplication():
                 for i in range(len(loc_img_result["images"][0]["classifiers"][0]["classes"])):
                         result_loc1=result_loc1+f'<tr><td><center><h3 style="color:blue;font-family:Comic Sans MS">{loc_img_result["images"][0]["classifiers"][0]["classes"][i]["class"]}</h3> </center></td><td><center><h3 style="color:blue;font-family:Comic Sans MS"> {str(round(loc_img_result["images"][0]["classifiers"][0]["classes"][i]["score"]*100))}%</h3> </center></td></tr>'
                 result_loc1=result_loc1+f'</table></body></html>'
-                frame_loc = HtmlFrame(tab2,height=10)
+                frame_loc = HtmlFrame(tab2,horizontal_scrollbar="auto",vertical_scrollbar="auto")
                 frame_loc.set_content(result_loc1)
-                clear_loc_btm["command"] = lambda one=result_loc, two=clear_loc_btm, three = empt1, four=frame_loc: self.clear(one,two,three,four)
+                clear_loc_btm["command"] = lambda one=result_loc, two=clear_loc_btm, three=frame_loc: self.clear(one,two,three)
                 clear_loc_btm["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
                 clear_loc_btm.pack()
                 result_loc.pack()
@@ -116,13 +159,11 @@ class MainApplication():
             
 
         def online_image_classify(self,tab1,url):
-                vr_api = IAMAuthenticator(" ") #paste your API Key
+                vr_api = IAMAuthenticator("api-key") #paste your API Key
                 vr1=vr(version="2018-03-19",authenticator=vr_api)
-                vr1.set_service_url(" ") #paste your service URL
+                vr1.set_service_url("service-url") #paste your service URL
                 try:
                         ibm_result=vr1.classify(url=url.get()).get_result()
-                        empt = ttk.Label(tab1)
-                        empt.pack()
                         result = ttk.Label(tab1,text= "Result")
                         clear_btm=Button(tab1,text="Clear result",bg="black",fg="white")
                         result["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold',underline = True )
@@ -130,9 +171,9 @@ class MainApplication():
                         for i in range(len(ibm_result["images"][0]["classifiers"][0]["classes"])):
                                 result1=result1+f'<tr><td><center><h3 style="color:blue;font-family:Comic Sans MS">{ibm_result["images"][0]["classifiers"][0]["classes"][i]["class"]}</h3> </center></td><td><center><h3 style="color:blue;font-family:Comic Sans MS"> {str(round(ibm_result["images"][0]["classifiers"][0]["classes"][i]["score"]*100))}%</h3> </center></td></tr>'
                         result1=result1+f'</table></body></html>'
-                        frame = HtmlFrame(tab1,height=10)
+                        frame = HtmlFrame(tab1,horizontal_scrollbar="auto",vertical_scrollbar="auto")
                         frame.set_content(result1)
-                        clear_btm["command"] = lambda one=result, two=clear_btm, three = empt, four=frame: self.clear(one,two,three,four)
+                        clear_btm["command"] = lambda one=result, two=clear_btm, three=frame: self.clear(one,two,three)
                         clear_btm["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
                         clear_btm.pack()
                         result.pack()
