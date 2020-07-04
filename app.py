@@ -2,11 +2,10 @@ from tkinter  import *
 from tkinter import ttk
 from tkinter import messagebox
 import tkinter.font as font
-from ibm_watson import VisualRecognitionV3 as vr
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from tkinterhtml import HtmlFrame
-from tkinter.filedialog import askopenfilename
-from ibm_watson import SpeechToTextV1
+from tkinter.filedialog import askopenfilename, asksaveasfilename
+from ibm_watson import SpeechToTextV1 , TextToSpeechV1 , VisualRecognitionV3 as vr
 
 class MainApplication():
 
@@ -70,6 +69,26 @@ class MainApplication():
             
                               
         def text_to_speech(self,master):
+                def convert():
+                        api_text_2_speech = IAMAuthenticator("api-key")
+                        text_2_speech = TextToSpeechV1(authenticator=api_text_2_speech)
+                        text_2_speech.set_service_url("service-url")
+                        if var.get() == "male voice":
+                                audio_result = asksaveasfilename(defaultextension=".mp3",filetypes=[("mp3 file","*.mp3")])
+                                with open(audio_result,"wb") as audio:
+                                        audio.write(text_2_speech.synthesize(text,accept="audio/mp3",voice="en-US_HenryV3Voice").get_result().content)
+                                        audio.close()
+                                messagebox.showinfo("Done","Your text file is successfully converted into audio file. Your audio file saved in male voice at " + audio_result)
+                        elif var.get() == "female voice":
+                                audio_result = asksaveasfilename(defaultextension=".mp3",filetypes=[("mp3 file","*.MP3")])
+                                with open(audio_result,"wb") as audio:
+                                        audio.write(text_2_speech.synthesize(text,accept="audio/mp3",voice="en-US_AllisonVoice").get_result().content)
+                                        audio.close()
+                                messagebox.showinfo("Done","Your text file is successfully converted into audio file. Your audio file is saved in female voice at " + audio_result)
+                                
+                        else:
+                                messagebox.showwarning(title="Voice Error", message=f'''Please select the voice and save again.''')
+                                
                 def sel():
                         selection = "Your audio will be saved in " + str(var.get())
                         label.config(text = selection)
@@ -93,7 +112,7 @@ class MainApplication():
                 label = ttk.Label(master)
                 label["font"] = font.Font(family='Comic Sans MS', size=11)
                 label.pack()
-                save_audio = Button(master,text="Save",bg="blue",fg="white")
+                save_audio = Button(master,text="Save",bg="blue",fg="white",command=convert)
                 save_audio["font"] = font.Font(family='Comic Sans MS', size=11, weight='bold')
                 save_audio.pack()
                 em = ttk.Label(master)
