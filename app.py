@@ -1,24 +1,28 @@
 from tkinter  import *
 from tkinter import ttk
 from tkinter import messagebox
+import webbrowser, requests
 import tkinter.font as font
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from tkinterhtml import HtmlFrame
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 from ibm_watson import SpeechToTextV1 , TextToSpeechV1 , VisualRecognitionV3 as vr
 
+
 class MainApplication():
+        
 
         def __init__(self, parent, *args, **kwargs):
+
+                        
+                def callback(url):
+                        webbrowser.open_new(url)
                 self.parent = parent
                 parent.config(bg="red")
-                about_app =  Label(parent,text='''This application is developed by Heflin Stephen Raj S to classify images and convert text document to speech and vice versa.\nContact the developer at www.heflin.dev''', fg ="white",bg="red")
-                about_app["font"] = font.Font(family='Comic Sans MS', size = 15, weight='bold', underline=True)
-                about_app.pack()
                 s = ttk.Style()
                 s.theme_create( "MyStyle", parent="alt", settings={"TNotebook": {"configure": {"tabmargins": [2, 5, 2, 0] } },"TNotebook.Tab": {"configure": {"padding": [50, 10],"background": "sky blue","font" : ('Comic Sans MS', '13', 'bold')},"map":       {"background": [("selected", "white")]},}})
                 s.theme_use("MyStyle")
-                parent.title("Tab Widget")
+                parent.title("Smart classify")
                 tabControl =  ttk.Notebook(parent)
                 tab1 = ttk.Frame(tabControl)
                 tab2 = ttk.Frame(tabControl)
@@ -26,8 +30,10 @@ class MainApplication():
                 tab3 = ttk.Frame(tabControl) 
                 tabControl.add(tab3, text ='Speech to Text') 
                 tab4 = ttk.Frame(tabControl)
+                tab5 = ttk.Frame(tabControl)
                 tabControl.add(tab4, text ='Text to Speech')
-                tabControl.add(tab2, text ='Local Image Classification') 
+                tabControl.add(tab2, text ='Local Image Classification')
+                tabControl.add(tab5, text ='About') 
                 tabControl.pack(expand = 1, fill ="both") 
                 url_img_info = ttk.Label(tab1,text ='''We will send the image to IBM Watson Visual Recognition service for classification.\nWe do not save your images.\nInput: URL\nOutput: Classifications will be appeared on the screen with confident score for each classification.\n''',justify=CENTER)
                 url_img_info["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold')
@@ -66,6 +72,44 @@ class MainApplication():
                 convert_txt_2_sph["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
                 convert_txt_2_sph.pack()
                 ttk.Label(tab4).pack()
+                about_the_app = ttk.Label(tab5,text="Smart classify is developed by Heflin Stephen Raj S with IBM Watsson and Tkinter in Python.",justify=CENTER)
+                about_the_app["font"] = font.Font(family='Comic Sans MS', size=13,weight='bold')
+                about_the_app.pack()
+                contact = ttk.Label(tab5,text="Contact the developer at www.heflin.dev",justify=CENTER,cursor="hand2",foreground="blue")
+                contact["font"] = font.Font(family='Comic Sans MS', size=13,weight='bold',underline=True)
+                contact.bind("<Button-1>", lambda e: callback("www.heflin.dev"))
+                contact.pack()
+                ttk.Label(tab5).pack()
+                info = ttk.Label(tab5,text="Smart classify don't save your data at anywhere.\nSmart classify will send your data to IBM Wstson through IBM Waston Python Software Development Kit (SDK) for classification.\nWe have demo for all the IBM Watson services used in Smart classify appplication.",justify=CENTER)
+                info["font"] = font.Font(family='Comic Sans MS', size=13,weight='bold')
+                info.pack()
+                ttk.Label(tab5).pack()
+                demo_spech_2_text = ttk.Label(tab5,text="Click here for demo on IBM Watson Speech to Text service.",justify=CENTER,cursor="hand2",foreground="blue")
+                demo_spech_2_text.bind("<Button-1>", lambda e: callback("https://youtu.be/ZTIjEjeJmwU"))
+                demo_spech_2_text["font"] = font.Font(family='Comic Sans MS', size=13,weight='bold',underline=True)
+                demo_spech_2_text.pack()
+                ttk.Label(tab5).pack()
+                demo_text_2_speech = ttk.Label(tab5,text="Click here for demo on IBM Watson Text to Speech service.",justify=CENTER,cursor="hand2",foreground="blue")
+                demo_text_2_speech.bind("<Button-1>", lambda e: callback("https://youtu.be/khBVC3Sr6z8"))
+                demo_text_2_speech["font"] = font.Font(family='Comic Sans MS', size=13,weight='bold',underline=True)
+                demo_text_2_speech.pack()
+                ttk.Label(tab5).pack()
+                demo_vr = ttk.Label(tab5,text="Click here for demo on IBM Watson Visual Recognition service.",justify=CENTER,cursor="hand2",foreground="blue")
+                demo_vr.bind("<Button-1>", lambda e: callback("https://youtu.be/e0_04TV2za8"))
+                demo_vr["font"] = font.Font(family='Comic Sans MS', size=13,weight='bold',underline=True)
+                demo_vr.pack()
+                ttk.Label(tab5).pack()
+                demo_text_2_speech_options = ttk.Label(tab5,text="Click here to add time break, expressions and change voices in IBM Watson Text to Speech service.",justify=CENTER,cursor="hand2",foreground="blue")
+                demo_text_2_speech_options.bind("<Button-1>", lambda e: callback("https://youtu.be/q0IoRcDojkY"))
+                demo_text_2_speech_options["font"] = font.Font(family='Comic Sans MS', size=13,weight='bold',underline=True)
+                demo_text_2_speech_options.pack()
+                try:
+                        data = requests.get("https://www.google.com").status_code
+                except:
+                        check = messagebox.showwarning("Connection error", "Please check your internet connectivity.\nSmart classify needs proper internet connection to run")
+                        if check == "ok":
+                                parent.destroy()
+
             
                               
         def text_to_speech(self,master):
