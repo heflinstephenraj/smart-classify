@@ -99,10 +99,13 @@ class MainApplication():
                 demo_vr["font"] = font.Font(family='Comic Sans MS', size=13,weight='bold',underline=True)
                 demo_vr.pack()
                 ttk.Label(tab5).pack()
-                demo_text_2_speech_options = ttk.Label(tab5,text="Click here to add time break, expressions and change voices in IBM Watson Text to Speech service.",justify=CENTER,cursor="hand2",foreground="blue")
+                demo_text_2_speech_options = ttk.Label(tab5,text="Click here to add time break, expressions and change the voice in IBM Watson Text to Speech service.",justify=CENTER,cursor="hand2",foreground="blue")
                 demo_text_2_speech_options.bind("<Button-1>", lambda e: callback("https://youtu.be/q0IoRcDojkY"))
                 demo_text_2_speech_options["font"] = font.Font(family='Comic Sans MS', size=13,weight='bold',underline=True)
                 demo_text_2_speech_options.pack()
+                thank = ttk.Label(tab5, text= "\nThank you for using our app.",justify=CENTER)
+                thank['font']=font.Font(family='Comic Sans MS', size=13,weight='bold')
+                thank.pack()
                 try:
                         data = requests.get("https://www.google.com").status_code
                 except:
@@ -114,9 +117,9 @@ class MainApplication():
                               
         def text_to_speech(self,master):
                 def convert():
-                        api_text_2_speech = IAMAuthenticator("api-key")
+                        api_text_2_speech = IAMAuthenticator("text to speech api key") #paste your api key
                         text_2_speech = TextToSpeechV1(authenticator=api_text_2_speech)
-                        text_2_speech.set_service_url("service-url")
+                        text_2_speech.set_service_url("text to speech service url") #paste your service url
                         if var.get() == "male voice":
                                 audio_result = asksaveasfilename(defaultextension=".mp3",filetypes=[("mp3 file","*.mp3")])
                                 with open(audio_result,"wb") as audio:
@@ -170,9 +173,9 @@ class MainApplication():
                 
 
         def speech_to_text(self,master):
-                speech_to_text_api = IAMAuthenticator('api-key')
+                speech_to_text_api = IAMAuthenticator('speech to text api key') #paste your api key
                 speech_to_text = SpeechToTextV1(authenticator=speech_to_text_api)
-                speech_to_text.set_service_url('service-url')
+                speech_to_text.set_service_url('speech to text service url') #paste your service url
                 audio = askopenfilename(filetypes=[("mp3 file","*.mp3")])
                 with open(audio,"rb") as audio_file:
                         speech_to_text_results = speech_to_text.recognize(audio=audio_file,content_type='audio/mp3').get_result()
@@ -199,9 +202,9 @@ class MainApplication():
 
         def local_image_classify(self,tab2):
                 img_file = askopenfilename(filetypes=[("Image files",("*.png","*.jpeg","*.jpg"))])                   
-                vr_api = IAMAuthenticator("api-key") #paste your API Key
+                vr_api = IAMAuthenticator("visual recognition api key") #paste your API Key
                 vr1=vr(version="2018-03-19",authenticator=vr_api)
-                vr1.set_service_url("service-url") #paste your service URL
+                vr1.set_service_url("visual recognition service url") #paste your service URL
                 with open(img_file,"rb") as img:
                         loc_img_result=vr1.classify(images_file=img).get_result()
                 result_loc = ttk.Label(tab2,text= "Result")
@@ -222,9 +225,9 @@ class MainApplication():
             
 
         def online_image_classify(self,tab1,url):
-                vr_api = IAMAuthenticator("api-key") #paste your API Key
+                vr_api = IAMAuthenticator("visual recognition api key") #paste your API Key
                 vr1=vr(version="2018-03-19",authenticator=vr_api)
-                vr1.set_service_url("service-url") #paste your service URL
+                vr1.set_service_url("visual recognition service url") #paste your service URL
                 try:
                         ibm_result=vr1.classify(url=url.get()).get_result()
                         result = ttk.Label(tab1,text= "Result")
