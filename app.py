@@ -8,12 +8,12 @@ from tkinterhtml import HtmlFrame
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 from ibm_watson import SpeechToTextV1 , TextToSpeechV1 , VisualRecognitionV3 as vr
 
-
 class MainApplication():
         
 
         def __init__(self, parent, *args, **kwargs):
-
+                def callback(url):	
+                        webbrowser.open_new(url)
                 self.parent = parent
                 parent.config(bg="red")
                 s = ttk.Style()
@@ -113,85 +113,97 @@ class MainApplication():
             
                               
         def text_to_speech(self,master):
-                def convert():
-                        api_text_2_speech = IAMAuthenticator("text to speech api key") #paste your text to speech api key
-                        text_2_speech = TextToSpeechV1(authenticator=api_text_2_speech)
-                        text_2_speech.set_service_url("text to speech service url") #paste your text to speech service url
-                        if var.get() == "male voice":
-                                audio_result = asksaveasfilename(defaultextension=".mp3",filetypes=[("mp3 file","*.mp3")])
-                                with open(audio_result,"wb") as audio:
-                                        audio.write(text_2_speech.synthesize(text,accept="audio/mp3",voice="en-US_HenryV3Voice").get_result().content)
-                                        audio.close()
-                                messagebox.showinfo("Done","Your text file is successfully converted into audio file. Your audio file saved in male voice at " + audio_result)
-                        elif var.get() == "female voice":
-                                audio_result = asksaveasfilename(defaultextension=".mp3",filetypes=[("mp3 file","*.MP3")])
-                                with open(audio_result,"wb") as audio:
-                                        audio.write(text_2_speech.synthesize(text,accept="audio/mp3",voice="en-US_AllisonVoice").get_result().content)
-                                        audio.close()
-                                messagebox.showinfo("Done","Your text file is successfully converted into audio file. Your audio file is saved in female voice at " + audio_result)
+                try:
+                        def convert():
+                                api_text_2_speech = IAMAuthenticator("paste here") #paste your text to speech api key
+                                text_2_speech = TextToSpeechV1(authenticator=api_text_2_speech)
+                                text_2_speech.set_service_url("paste here") #paste your text to speech service url
+                                if var.get() == "male voice":
+                                        try:
+                                                audio_result = asksaveasfilename(defaultextension=".mp3",filetypes=[("mp3 file","*.mp3")])
+                                                with open(audio_result,"wb") as audio:
+                                                        audio.write(text_2_speech.synthesize(text,accept="audio/mp3",voice="en-US_HenryV3Voice").get_result().content)
+                                                        audio.close()
+                                                messagebox.showinfo("Done","Your text file is successfully converted into audio file. Your audio file saved in male voice at " + audio_result)
+                                        except:
+                                                pass
+                                elif var.get() == "female voice":
+                                        try:
+                                                audio_result = asksaveasfilename(defaultextension=".mp3",filetypes=[("mp3 file","*.MP3")])
+                                                with open(audio_result,"wb") as audio:
+                                                        audio.write(text_2_speech.synthesize(text,accept="audio/mp3",voice="en-US_AllisonVoice").get_result().content)
+                                                        audio.close()
+                                                messagebox.showinfo("Done","Your text file is successfully converted into audio file. Your audio file is saved in female voice at " + audio_result)
+                                        except:
+                                                pass
                                 
-                        else:
-                                messagebox.showwarning(title="Voice Error", message=f'''Please select the voice and save again.''')
+                                else:
+                                        messagebox.showwarning(title="Voice Error", message=f'''Please select the voice and save again.''')
                                 
-                def sel():
-                        selection = "Your audio will be saved in " + str(var.get())
-                        label.config(text = selection)
-                text_file = askopenfilename(filetypes=[("text file","*.txt")])
-                with open(text_file) as text_data:
-                        text = text_data.read()
-                text_html = f'''<html><head></head><body><p>{text}</p></body><html>'''
-                result_loc = ttk.Label(master,text= "The Text")
-                clear_loc_btm=Button(master,text="Clear",bg="black",fg="white")
-                result_loc["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold',underline = True )
-                frame_loc = HtmlFrame(master,horizontal_scrollbar="auto",vertical_scrollbar="auto")
-                frame_loc.set_content(text_html)
-                clear_loc_btm["font"] = font.Font(family='Comic Sans MS', size=12,weight='bold')
-                var = StringVar()
-                R1 = Radiobutton(master, text="Save as male voice", variable=var, value="male voice",command=sel)
-                R1["font"] = font.Font(family='Comic Sans MS', size=11)
-                R1.pack()
-                R2 = Radiobutton(master, text="Save as female voice", variable=var, value="female voice",command=sel)
-                R2["font"] = font.Font(family='Comic Sans MS', size=11)
-                R2.pack() 
-                label = ttk.Label(master)
-                label["font"] = font.Font(family='Comic Sans MS', size=11)
-                label.pack()
-                save_audio = Button(master,text="Save",bg="blue",fg="white",command=convert)
-                save_audio["font"] = font.Font(family='Comic Sans MS', size=11, weight='bold')
-                save_audio.pack()
-                em = ttk.Label(master)
-                em.pack()
-                clear_loc_btm["command"] = lambda one=result_loc, two=clear_loc_btm, three=frame_loc, four=R1, five=R2, six=label, seven = save_audio,egith = em: self.clear(one,two,three,four,five,six,seven,egith)
-                clear_loc_btm.pack()
-                result_loc.pack()
-                frame_loc.pack(fill="x")
+                        def sel():
+                                selection = "Your audio will be saved in " + str(var.get())
+                                label.config(text = selection)
+                        text_file = askopenfilename(filetypes=[("text file","*.txt")])
+                        with open(text_file) as text_data:
+                                text = text_data.read()
+                        text_html = f'''<html><head></head><body><p>{text}</p></body><html>'''
+                        result_loc = ttk.Label(master,text= "The Text")
+                        clear_loc_btm=Button(master,text="Clear",bg="black",fg="white")
+                        result_loc["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold',underline = True )
+                        frame_loc = HtmlFrame(master,horizontal_scrollbar="auto",vertical_scrollbar="auto")
+                        frame_loc.set_content(text_html)
+                        clear_loc_btm["font"] = font.Font(family='Comic Sans MS', size=12,weight='bold')
+                        var = StringVar()
+                        R1 = Radiobutton(master, text="Save as male voice", variable=var, value="male voice",command=sel)
+                        R1["font"] = font.Font(family='Comic Sans MS', size=11)
+                        R1.pack()
+                        R2 = Radiobutton(master, text="Save as female voice", variable=var, value="female voice",command=sel)
+                        R2["font"] = font.Font(family='Comic Sans MS', size=11)
+                        R2.pack() 
+                        label = ttk.Label(master)
+                        label["font"] = font.Font(family='Comic Sans MS', size=11)
+                        label.pack()
+                        save_audio = Button(master,text="Save",bg="blue",fg="white",command=convert)
+                        save_audio["font"] = font.Font(family='Comic Sans MS', size=11, weight='bold')
+                        save_audio.pack()
+                        em = ttk.Label(master)
+                        em.pack()
+                        clear_loc_btm["command"] = lambda one=result_loc, two=clear_loc_btm, three=frame_loc, four=R1, five=R2, six=label, seven = save_audio,egith = em: self.clear(one,two,three,four,five,six,seven,egith)
+                        clear_loc_btm.pack()
+                        result_loc.pack()
+                        frame_loc.pack(fill="x")
+                except:
+                        pass
 
 
                 
 
         def speech_to_text(self,master):
-                speech_to_text_api = IAMAuthenticator('speech to text api key') #paste your speech to text api key
+                speech_to_text_api = IAMAuthenticator('paste here') #paste your speech to text api key
                 speech_to_text = SpeechToTextV1(authenticator=speech_to_text_api)
-                speech_to_text.set_service_url('speech to text service url') #paste your speech to text service url
+                speech_to_text.set_service_url('paste here') #paste your speech to text service url
                 audio = askopenfilename(filetypes=[("mp3 file","*.mp3")])
-                with open(audio,"rb") as audio_file:
-                        speech_to_text_results = speech_to_text.recognize(audio=audio_file,content_type='audio/mp3').get_result()
-                result_s_2_t='''<html><head></head><body><table style="width:100%" border="1"><tr><th><h3 style="color:red;font-family:Comic Sans MS">Classification</h3></th><th><h3 style="color:red;font-family:Comic Sans MS">Confident\nScore<h3></th></tr>'''
-                for result in speech_to_text_results["results"]:
-                        for classification in result:
-                                if classification != "final":
-                                        result_s_2_t=result_s_2_t+f'<tr><td><center><h3 style="color:blue;font-family:Comic Sans MS">{result[classification][0]["transcript"]}</h3> </center></td><td><center><h3 style="color:blue;font-family:Comic Sans MS"> {str(round(result[classification][0]["confidence"]*100))}%</h3> </center></td></tr>'
-                result_s_2_t=result_s_2_t+f'</table></body></html>'
-                result_loc = ttk.Label(master,text= "Result")
-                clear_loc_btm=Button(master,text="Clear result",bg="black",fg="white")
-                result_loc["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold',underline = True )
-                frame_loc = HtmlFrame(master,horizontal_scrollbar="auto",vertical_scrollbar="auto")
-                frame_loc.set_content(result_s_2_t)
-                clear_loc_btm["command"] = lambda one=result_loc, two=clear_loc_btm, three=frame_loc: self.clear(one,two,three)
-                clear_loc_btm["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
-                clear_loc_btm.pack()
-                result_loc.pack()
-                frame_loc.pack(fill="x")
+                try:
+                        with open(audio,"rb") as audio_file:
+                                speech_to_text_results = speech_to_text.recognize(audio=audio_file,content_type='audio/mp3').get_result()
+                        result_s_2_t='''<html><head></head><body><table style="width:100%" border="1"><tr><th><h3 style="color:red;font-family:Comic Sans MS">Classification</h3></th><th><h3 style="color:red;font-family:Comic Sans MS">Confident\nScore<h3></th></tr>'''
+                        for result in speech_to_text_results["results"]:
+                                for classification in result:
+                                        if classification != "final":
+                                                result_s_2_t=result_s_2_t+f'<tr><td><center><h3 style="color:blue;font-family:Comic Sans MS">{result[classification][0]["transcript"]}</h3> </center></td><td><center><h3 style="color:blue;font-family:Comic Sans MS"> {str(round(result[classification][0]["confidence"]*100))}%</h3> </center></td></tr>'
+                        result_s_2_t=result_s_2_t+f'</table></body></html>'
+                        result_loc = ttk.Label(master,text= "Result")
+                        clear_loc_btm=Button(master,text="Clear result",bg="black",fg="white")
+                        result_loc["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold',underline = True )
+                        frame_loc = HtmlFrame(master,horizontal_scrollbar="auto",vertical_scrollbar="auto")
+                        frame_loc.set_content(result_s_2_t)
+                        clear_loc_btm["command"] = lambda one=result_loc, two=clear_loc_btm, three=frame_loc: self.clear(one,two,three)
+                        clear_loc_btm["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
+                        clear_loc_btm.pack()
+                        result_loc.pack()
+                        frame_loc.pack(fill="x")
+                except:
+                        pass
 
 
 
@@ -199,50 +211,56 @@ class MainApplication():
 
         def local_image_classify(self,tab2):
                 img_file = askopenfilename(filetypes=[("Image files",("*.png","*.jpeg","*.jpg"))])                   
-                vr_api = IAMAuthenticator("visual recognition api key") #paste your visual recognition API Key
+                vr_api = IAMAuthenticator("paste here") #paste your visual recognition API Key
                 vr1=vr(version="2018-03-19",authenticator=vr_api)
-                vr1.set_service_url("visual recognition service url") #paste your visual recognition service URL
-                with open(img_file,"rb") as img:
-                        loc_img_result=vr1.classify(images_file=img).get_result()
-                result_loc = ttk.Label(tab2,text= "Result")
-                clear_loc_btm=Button(tab2,text="Clear result",bg="black",fg="white")
-                result_loc["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold',underline = True )
-                result_loc1='''<html><head></head><body><table style="width:100%" border="1"><tr><th><h2 style="color:red;font-family:Comic Sans MS">Classification</h2></th><th><h2 style="color:red;font-family:Comic Sans MS">Confident Score<h2></th></tr>'''
-                for i in range(len(loc_img_result["images"][0]["classifiers"][0]["classes"])):
-                        result_loc1=result_loc1+f'<tr><td><center><h3 style="color:blue;font-family:Comic Sans MS">{loc_img_result["images"][0]["classifiers"][0]["classes"][i]["class"]}</h3> </center></td><td><center><h3 style="color:blue;font-family:Comic Sans MS"> {str(round(loc_img_result["images"][0]["classifiers"][0]["classes"][i]["score"]*100))}%</h3> </center></td></tr>'
-                result_loc1=result_loc1+f'</table></body></html>'
-                frame_loc = HtmlFrame(tab2,horizontal_scrollbar="auto",vertical_scrollbar="auto")
-                frame_loc.set_content(result_loc1)
-                clear_loc_btm["command"] = lambda one=result_loc, two=clear_loc_btm, three=frame_loc: self.clear(one,two,three)
-                clear_loc_btm["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
-                clear_loc_btm.pack()
-                result_loc.pack()
-                frame_loc.pack()
+                vr1.set_service_url("paste here") #paste your visual recognition your service URL
+                try:
+                        with open(img_file,"rb") as img:
+                                loc_img_result=vr1.classify(images_file=img).get_result()
+                        result_loc = ttk.Label(tab2,text= "Result")
+                        clear_loc_btm=Button(tab2,text="Clear result",bg="black",fg="white")
+                        result_loc["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold',underline = True )
+                        result_loc1='''<html><head></head><body><table style="width:100%" border="1"><tr><th><h2 style="color:red;font-family:Comic Sans MS">Classification</h2></th><th><h2 style="color:red;font-family:Comic Sans MS">Confident Score<h2></th></tr>'''
+                        for i in range(len(loc_img_result["images"][0]["classifiers"][0]["classes"])):
+                                result_loc1=result_loc1+f'<tr><td><center><h3 style="color:blue;font-family:Comic Sans MS">{loc_img_result["images"][0]["classifiers"][0]["classes"][i]["class"]}</h3> </center></td><td><center><h3 style="color:blue;font-family:Comic Sans MS"> {str(round(loc_img_result["images"][0]["classifiers"][0]["classes"][i]["score"]*100))}%</h3> </center></td></tr>'
+                        result_loc1=result_loc1+f'</table></body></html>'
+                        frame_loc = HtmlFrame(tab2,horizontal_scrollbar="auto",vertical_scrollbar="auto")
+                        frame_loc.set_content(result_loc1)
+                        clear_loc_btm["command"] = lambda one=result_loc, two=clear_loc_btm, three=frame_loc: self.clear(one,two,three)
+                        clear_loc_btm["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
+                        clear_loc_btm.pack()
+                        result_loc.pack()
+                        frame_loc.pack()
+                except:
+                        pass
 
             
 
         def online_image_classify(self,tab1,url):
-                vr_api = IAMAuthenticator("visual recognition api key") #paste your visual recognition API Key
-                vr1=vr(version="2018-03-19",authenticator=vr_api)
-                vr1.set_service_url("visual recognition service url") #paste your visual recognition service URL
                 try:
-                        ibm_result=vr1.classify(url=url.get()).get_result()
-                        result = ttk.Label(tab1,text= "Result")
-                        clear_btm=Button(tab1,text="Clear result",bg="black",fg="white")
-                        result["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold',underline = True )
-                        result1='''<html><head></head><body><table style="width:100%" border="1"><tr><th><h2 style="color:red;font-family:Comic Sans MS">Classification</h2></th><th><h2 style="color:red;font-family:Comic Sans MS">Confident Score<h2></th></tr>'''
-                        for i in range(len(ibm_result["images"][0]["classifiers"][0]["classes"])):
-                                result1=result1+f'<tr><td><center><h3 style="color:blue;font-family:Comic Sans MS">{ibm_result["images"][0]["classifiers"][0]["classes"][i]["class"]}</h3> </center></td><td><center><h3 style="color:blue;font-family:Comic Sans MS"> {str(round(ibm_result["images"][0]["classifiers"][0]["classes"][i]["score"]*100))}%</h3> </center></td></tr>'
-                        result1=result1+f'</table></body></html>'
-                        frame = HtmlFrame(tab1,horizontal_scrollbar="auto",vertical_scrollbar="auto")
-                        frame.set_content(result1)
-                        clear_btm["command"] = lambda one=result, two=clear_btm, three=frame: self.clear(one,two,three)
-                        clear_btm["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
-                        clear_btm.pack()
-                        result.pack()
-                        frame.pack()
+                        vr_api = IAMAuthenticator("paste here") #paste visual recognition your API Key
+                        vr1=vr(version="2018-03-19",authenticator=vr_api)
+                        vr1.set_service_url("paste here") #paste your visual recognition your service URL
+                        if url.get().split(".")[-1] == "gif" or url.get().split(".")[-1] == "jpg" or url.get().split(".")[-1] == "png" or url.get().split(".")[-1] == "tif":
+                                ibm_result=vr1.classify(url=url.get()).get_result()
+                                result = ttk.Label(tab1,text= "Result")
+                                clear_btm=Button(tab1,text="Clear result",bg="black",fg="white")
+                                result["font"] = font.Font(family='Comic Sans MS', size=15, weight='bold',underline = True )
+                                result1='''<html><head></head><body><table style="width:100%" border="1"><tr><th><h2 style="color:red;font-family:Comic Sans MS">Classification</h2></th><th><h2 style="color:red;font-family:Comic Sans MS">Confident Score<h2></th></tr>'''
+                                for i in range(len(ibm_result["images"][0]["classifiers"][0]["classes"])):
+                                        result1=result1+f'<tr><td><center><h3 style="color:blue;font-family:Comic Sans MS">{ibm_result["images"][0]["classifiers"][0]["classes"][i]["class"]}</h3> </center></td><td><center><h3 style="color:blue;font-family:Comic Sans MS"> {str(round(ibm_result["images"][0]["classifiers"][0]["classes"][i]["score"]*100))}%</h3> </center></td></tr>'
+                                result1=result1+f'</table></body></html>'
+                                frame = HtmlFrame(tab1,horizontal_scrollbar="auto",vertical_scrollbar="auto")
+                                frame.set_content(result1)
+                                clear_btm["command"] = lambda one=result, two=clear_btm, three=frame: self.clear(one,two,three)
+                                clear_btm["font"] = font.Font(family='Comic Sans MS', size=10,weight='bold')
+                                clear_btm.pack()
+                                result.pack()
+                                frame.pack()
+                        else:
+                                raise NameError()
                 except:
-                        messagebox.showwarning(title="URL Error", message=f'''Please enter the proper image URL to classify.\nThe given URl is not a image URL.\nThe given URL is "{url.get()}".''')
+                        messagebox.showwarning(title="URL Error", message=f'''Please enter the proper image URL to classify.\nThe given URl is not a image URL.\nThe given URL is "{url.get()}\n The proper img url end with .gif/.jpg/.png/.tif".''')
                     
 
         def clear(self,*widgets):
