@@ -14,9 +14,6 @@ class MainApplication():
 
         def __init__(self, parent, *args, **kwargs):
 
-                        
-                def callback(url):
-                        webbrowser.open_new(url)
                 self.parent = parent
                 parent.config(bg="red")
                 s = ttk.Style()
@@ -117,9 +114,9 @@ class MainApplication():
                               
         def text_to_speech(self,master):
                 def convert():
-                        api_text_2_speech = IAMAuthenticator("text to speech api key") #paste your api key
+                        api_text_2_speech = IAMAuthenticator("text to speech api key") #paste your text to speech api key
                         text_2_speech = TextToSpeechV1(authenticator=api_text_2_speech)
-                        text_2_speech.set_service_url("text to speech service url") #paste your service url
+                        text_2_speech.set_service_url("text to speech service url") #paste your text to speech service url
                         if var.get() == "male voice":
                                 audio_result = asksaveasfilename(defaultextension=".mp3",filetypes=[("mp3 file","*.mp3")])
                                 with open(audio_result,"wb") as audio:
@@ -173,9 +170,9 @@ class MainApplication():
                 
 
         def speech_to_text(self,master):
-                speech_to_text_api = IAMAuthenticator('speech to text api key') #paste your api key
+                speech_to_text_api = IAMAuthenticator('speech to text api key') #paste your speech to text api key
                 speech_to_text = SpeechToTextV1(authenticator=speech_to_text_api)
-                speech_to_text.set_service_url('speech to text service url') #paste your service url
+                speech_to_text.set_service_url('speech to text service url') #paste your speech to text service url
                 audio = askopenfilename(filetypes=[("mp3 file","*.mp3")])
                 with open(audio,"rb") as audio_file:
                         speech_to_text_results = speech_to_text.recognize(audio=audio_file,content_type='audio/mp3').get_result()
@@ -202,9 +199,9 @@ class MainApplication():
 
         def local_image_classify(self,tab2):
                 img_file = askopenfilename(filetypes=[("Image files",("*.png","*.jpeg","*.jpg"))])                   
-                vr_api = IAMAuthenticator("visual recognition api key") #paste your API Key
+                vr_api = IAMAuthenticator("visual recognition api key") #paste your visual recognition API Key
                 vr1=vr(version="2018-03-19",authenticator=vr_api)
-                vr1.set_service_url("visual recognition service url") #paste your service URL
+                vr1.set_service_url("visual recognition service url") #paste your visual recognition service URL
                 with open(img_file,"rb") as img:
                         loc_img_result=vr1.classify(images_file=img).get_result()
                 result_loc = ttk.Label(tab2,text= "Result")
@@ -225,9 +222,9 @@ class MainApplication():
             
 
         def online_image_classify(self,tab1,url):
-                vr_api = IAMAuthenticator("visual recognition api key") #paste your API Key
+                vr_api = IAMAuthenticator("visual recognition api key") #paste your visual recognition API Key
                 vr1=vr(version="2018-03-19",authenticator=vr_api)
-                vr1.set_service_url("visual recognition service url") #paste your service URL
+                vr1.set_service_url("visual recognition service url") #paste your visual recognition service URL
                 try:
                         ibm_result=vr1.classify(url=url.get()).get_result()
                         result = ttk.Label(tab1,text= "Result")
