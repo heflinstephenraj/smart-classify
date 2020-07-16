@@ -260,7 +260,7 @@ class MainApplication():
                         else:
                                 raise NameError()
                 except:
-                        messagebox.showwarning(title="URL Error", message=f'''Please enter the proper image URL to classify.\nThe given URl is not a image URL.\nThe given URL is "{url.get()}\n The proper img url end with .gif/.jpg/.png/.tif".''')
+                        messagebox.showwarning(title="URL Error", message=f'''Please enter the proper image URL to classify.\nThe given URl is not a image URL.\nThe given URL is {url.get()}\n The proper image url will end with .gif/.jpg/.png/.tif.''')
                     
 
         def clear(self,*widgets):
