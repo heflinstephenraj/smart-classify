@@ -241,7 +241,7 @@ class MainApplication():
                         vr_api = IAMAuthenticator("paste here") #paste visual recognition your API Key
                         vr1=vr(version="2018-03-19",authenticator=vr_api)
                         vr1.set_service_url("paste here") #paste your visual recognition your service URL
-                        if url.get().split(".")[-1] == "gif" or url.get().split(".")[-1] == "jpg" or url.get().split(".")[-1] == "png" or url.get().split(".")[-1] == "tif":
+                        if url.get().split(".")[-1] == "gif" or url.get().split(".")[-1] == "jpg" or url.get().split(".")[-1] == "png" or url.get().split(".")[-1] == "tif" or url.get().split(".")[-1] == "jpeg":
                                 ibm_result=vr1.classify(url=url.get()).get_result()
                                 result = ttk.Label(tab1,text= "Result")
                                 clear_btm=Button(tab1,text="Clear result",bg="black",fg="white")
