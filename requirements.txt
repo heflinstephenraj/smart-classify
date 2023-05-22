@@ -1,4 +1,4 @@
 ibm-cloud-sdk-core==1.5.1
 ibm-watson==4.3.0
-requests==2.23.0
+requests==2.31.0
 tkinterhtml==0.7
